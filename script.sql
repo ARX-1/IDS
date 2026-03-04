@@ -147,7 +147,7 @@ create table PRODUCT_table(
 create table ORDER_table(
     ID_order int not null,         --PK
     ID_customer int not null,      --FK
-    ID_shopping_cart int not null, --FK
+    --ID_shopping_cart int not null, --FK TODO: might remove this
     date_created int, --DDMMYYYY
     order_state number(1), --1 if paid, 0 otherwise
     total_amount int, --TODO: restrict that this cannot be 0
@@ -157,7 +157,7 @@ create table ORDER_table(
   
     --foregin keys:
     CONSTRAINT FK_ID_order_customer_check foreign key (ID_customer) references CUSTOMER(ID_customer),
-    CONSTRAINT FK_ID_order_shopping_cart_check foreign key (ID_shopping_cart) references SHOPPING_CART(ID_shopping_cart),
+    --CONSTRAINT FK_ID_order_shopping_cart_check foreign key (ID_shopping_cart) references SHOPPING_CART(ID_shopping_cart),
     CONSTRAINT order_state_check check (order_state in (0, 1))
 );
 
@@ -300,3 +300,78 @@ values (4005, 1002, 'Bianchi Sprint 105', 3214567890127, 94999, 'Classic Italian
 insert into PRODUCT_table (ID_product, ID_category, product_name, EAN_code, price, product_description, DPH, activity)
 values (4006, 1002, 'Canyon Ultimate CF SL 7', 3214567890128, 104999, 'Lightweight carbon frame with excellent handling.', 21, 1);
 
+--Shopping carts:
+insert into SHOPPING_CART(ID_shopping_cart, ID_customer, shopping_cart_status)
+values (50000, 1, 1);
+insert into SHOPPING_CART(ID_shopping_cart, ID_customer, shopping_cart_status)
+values (50001, 2, 1);
+insert into SHOPPING_CART(ID_shopping_cart, ID_customer, shopping_cart_status)
+values (50002, 3, 0);
+insert into SHOPPING_CART(ID_shopping_cart, ID_customer, shopping_cart_status)
+values (50003, 4, 1);
+insert into SHOPPING_CART(ID_shopping_cart, ID_customer, shopping_cart_status)
+values (50004, 5, 0);
+insert into SHOPPING_CART(ID_shopping_cart, ID_customer, shopping_cart_status)
+values (50005, 6, 1);
+insert into SHOPPING_CART(ID_shopping_cart, ID_customer, shopping_cart_status)
+values (50006, 7, 0);
+insert into SHOPPING_CART(ID_shopping_cart, ID_customer, shopping_cart_status)
+values (50007, 8, 1);
+insert into SHOPPING_CART(ID_shopping_cart, ID_customer, shopping_cart_status)
+values (50008, 9, 1);
+
+--Shopping carts items:
+insert into SHOPPING_CART_ITEM(ID_shopping_cart_item, ID_shopping_cart, ID_product, date_added_to_cart)
+values (60000, 50000, 2002, 04032026);
+insert into SHOPPING_CART_ITEM(ID_shopping_cart_item, ID_shopping_cart, ID_product, date_added_to_cart)
+values (60001, 50000, 3001, 04032026);
+insert into SHOPPING_CART_ITEM(ID_shopping_cart_item, ID_shopping_cart, ID_product, date_added_to_cart)
+values (60002, 50001, 2005, 03032026);
+insert into SHOPPING_CART_ITEM(ID_shopping_cart_item, ID_shopping_cart, ID_product, date_added_to_cart)
+values (60003, 50003, 4004, 28022026);
+insert into SHOPPING_CART_ITEM(ID_shopping_cart_item, ID_shopping_cart, ID_product, date_added_to_cart)
+values (60004, 50005, 3003, 01032026);
+insert into SHOPPING_CART_ITEM(ID_shopping_cart_item, ID_shopping_cart, ID_product, date_added_to_cart)
+values (60005, 50007, 2007, 26022026);
+insert into SHOPPING_CART_ITEM(ID_shopping_cart_item, ID_shopping_cart, ID_product, date_added_to_cart)
+values (60006, 50008, 4002, 04032026);
+insert into SHOPPING_CART_ITEM(ID_shopping_cart_item, ID_shopping_cart, ID_product, date_added_to_cart)
+values (60007, 50008, 3005, 04032026);
+
+--Orders:
+insert into ORDER_table (ID_order, ID_customer, date_created, order_state, total_amount)
+values (70000, 1, 05032026, 1, 5098);
+insert into ORDER_table (ID_order, ID_customer, date_created, order_state, total_amount)
+values (70001, 2, 05032026, 1, 3499);
+insert into ORDER_table (ID_order, ID_customer, date_created, order_state, total_amount)
+values (70002, 4, 01032026, 1, 89999);
+insert into ORDER_table (ID_order, ID_customer, date_created, order_state, total_amount)
+values (70003, 6, 02032026, 1, 1099);
+insert into ORDER_table (ID_order, ID_customer, date_created, order_state, total_amount)
+values (70004, 8, 26022026, 1, 3299);
+insert into ORDER_table (ID_order, ID_customer, date_created, order_state, total_amount)
+values (70005, 9, 04032026, 1, 115798);
+
+--Order items:
+--Order 70000 (Customer 1, Cart 50000)
+insert into ORDER_ITEM (ID_order_item, ID_product, ID_order, quantity, selling_price)
+values (80000, 2002, 70000, 1, 3899);
+insert into ORDER_ITEM (ID_order_item, ID_product, ID_order, quantity, selling_price)
+values (80001, 3001, 70000, 1, 1199);
+--Order 70001 (Customer 2, Cart 50001)
+insert into ORDER_ITEM (ID_order_item, ID_product, ID_order, quantity, selling_price)
+values (80002, 2005, 70001, 1, 3499);
+--Order 70002 (Customer 4, Cart 50003)
+insert into ORDER_ITEM (ID_order_item, ID_product, ID_order, quantity, selling_price)
+values (80003, 4004, 70002, 1, 89999);
+--Order 70003 (Customer 6, Cart 50005)
+insert into ORDER_ITEM (ID_order_item, ID_product, ID_order, quantity, selling_price)
+values (80004, 3003, 70003, 1, 1099);
+--Order 70004 (Customer 8, Cart 50007)
+insert into ORDER_ITEM (ID_order_item, ID_product, ID_order, quantity, selling_price)
+values (80005, 2007, 70004, 1, 3299);
+--Order 70005 (Customer 9, Cart 50008)
+insert into ORDER_ITEM (ID_order_item, ID_product, ID_order, quantity, selling_price)
+values (80006, 4002, 70005, 1, 114999);
+insert into ORDER_ITEM (ID_order_item, ID_product, ID_order, quantity, selling_price)
+values (80007, 3005, 70005, 1, 799);
