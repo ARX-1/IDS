@@ -297,194 +297,229 @@ begin
 end;
 /
 
---TODO: add sample data
+--Sample data
 --Customers:
 insert into CUSTOMER (ID_customer, customer_name, customer_surname, email, phone_number, password_hash, registration_date, user_status)
 values (1, 'Martin', 'Fucheek', 'martin.fucheek@email.com', '+421999514321', 'pwdhash1', DATE '2025-02-01', 1);
 insert into CUSTOMER (ID_customer, customer_name, customer_surname, email, phone_number, password_hash, registration_date, user_status)
 values (2, 'Ondrej', 'Machula', 'ondrej.machula@email.com', '+421564514467', 'pwdhash2', DATE '2025-02-01', 1);
 insert into CUSTOMER (ID_customer, customer_name, customer_surname, email, phone_number, password_hash, registration_date, user_status)
-values (3, 'Andrej', 'Soska', 'andrej.soska@email.com', '+421999565487', 'pwdhash3', DATE '2007-05-27', 0);
+values (3, 'Jakub', 'Novák', 'jakub.novak@email.com', '+420731245678', 'pwdhash3', DATE '2025-02-03', 1);
 insert into CUSTOMER (ID_customer, customer_name, customer_surname, email, phone_number, password_hash, registration_date, user_status)
-values (4, 'Jakub', 'Novotný', 'jakub.novotny@email.com', '+420731445892', 'pwdhash4', DATE '2025-02-01', 1);
+values (4, 'Petra', 'Svobodová', 'petra.svobodova@gmail.com', '+420602314789', 'pwdhash4', DATE '2025-02-05', 1);
 insert into CUSTOMER (ID_customer, customer_name, customer_surname, email, phone_number, password_hash, registration_date, user_status)
-values (5, 'Petra', 'Kučerová', 'petra.kucerova@email.com', '+420728963441', 'pwdhash5', DATE '2025-02-01', 1);
+values (5, 'Tomáš', 'Horák', 'tomas.horak@seznam.cz', '+420773456123', 'pwdhash5', DATE '2025-02-08', 1);
 insert into CUSTOMER (ID_customer, customer_name, customer_surname, email, phone_number, password_hash, registration_date, user_status)
-values (6, 'Tomáš', 'Doležal', 'tomas.dolezal@email.com', '+420602784512', 'pwdhash6', DATE '2025-02-01', 1);
+values (6, 'Lucia', 'Kováčová', 'lucia.kovacova@email.sk', '+421911234567', 'pwdhash6', DATE '2025-02-10', 1);
 insert into CUSTOMER (ID_customer, customer_name, customer_surname, email, phone_number, password_hash, registration_date, user_status)
-values (7, 'Lucie', 'Svobodová', 'lucie.svobodova@email.com', '+420775632198', 'pwdhash7', DATE '2025-02-01', 1);
+values (7, 'Michal', 'Blaho', 'michal.blaho@email.sk', '+421905678234', 'pwdhash7', DATE '2025-02-12', 0);
 insert into CUSTOMER (ID_customer, customer_name, customer_surname, email, phone_number, password_hash, registration_date, user_status)
-values (8, 'David', 'Král', 'david.kral@email.com', '+420739852147', 'pwdhash8', DATE '2025-02-01', 1);
+values (8, 'Veronika', 'Procházková', 'veronika.prochazkova@gmail.com', '+420608987345', 'pwdhash8', DATE '2025-02-15', 1);
 insert into CUSTOMER (ID_customer, customer_name, customer_surname, email, phone_number, password_hash, registration_date, user_status)
-values (9, 'Barbora', 'Veselá', 'barbora.vesela@email.com', '+420721369845', 'pwdhash9', DATE '2025-02-01', 1);
-insert into CUSTOMER (customer_name, customer_surname, email, phone_number, password_hash, registration_date, user_status)
-values ('Auto', 'Generated', 'auto.generated@email.com', '+420700000000', 'pwdhash_auto', DATE '2026-03-29', 1);
+values (9, 'Radek', 'Poláček', 'radek.polacek@seznam.cz', '+420724561890', 'pwdhash9', DATE '2025-02-18', 1);
+insert into CUSTOMER (ID_customer, customer_name, customer_surname, email, phone_number, password_hash, registration_date, user_status)
+values (10, 'Zuzana', 'Tóthová', 'zuzana.tothova@email.sk', '+421944321098', 'pwdhash10', DATE '2025-02-20', 0);
 
 --Addresses:
-insert into ADDRESS_table(ID_address, ID_customer, city, street, postal_number, country)
+insert into ADDRESS_table (ID_address, ID_customer, city, street, postal_number, country)
 values (1000000, 1, 'Brno', 'Kounicova 12', '60200', 'Czech Republic');
-insert into ADDRESS_table(ID_address, ID_customer, city, street, postal_number, country)
+insert into ADDRESS_table (ID_address, ID_customer, city, street, postal_number, country)
 values (1000001, 2, 'Ostrava', 'Nádražní 84', '70200', 'Czech Republic');
-insert into ADDRESS_table(ID_address, ID_customer, city, street, postal_number, country)
-values (1000002, 3, 'Olomouc', 'Polská 3', '77900', 'Czech Republic');
-insert into ADDRESS_table(ID_address, ID_customer, city, street, postal_number, country)
-values (1000003, 4, 'Praha', 'Vinohradská 112', '13000', 'Czech Republic');
-insert into ADDRESS_table(ID_address, ID_customer, city, street, postal_number, country)
-values (1000004, 5, 'Plzeň', 'Klatovská tř. 45', '30100', 'Czech Republic');
-insert into ADDRESS_table(ID_address, ID_customer, city, street, postal_number, country)
-values (1000005, 6, 'Hradec Králové', 'Gočárova třída 18', '50002', 'Czech Republic');
-insert into ADDRESS_table(ID_address, ID_customer, city, street, postal_number, country)
-values (1000006, 7, 'České Budějovice', 'Husova tř. 22', '37001', 'Czech Republic');
-insert into ADDRESS_table(ID_address, ID_customer, city, street, postal_number, country)
-values (1000007, 8, 'Liberec', 'Masarykova 9', '46001', 'Czech Republic');
-insert into ADDRESS_table(ID_address, ID_customer, city, street, postal_number, country)
-values (1000008, 9, 'Zlín', 'tř. Tomáše Bati 154', '76001', 'Czech Republic');
+insert into ADDRESS_table (ID_address, ID_customer, city, street, postal_number, country, address_type)
+values (1000002, 3, 'Praha', 'Wenceslas Square 15', '11000', 'Czech Republic', 'delivery');
+insert into ADDRESS_table (ID_address, ID_customer, city, street, postal_number, country, address_type)
+values (1000003, 4, 'Plzeň', 'Americká 23', '30100', 'Czech Republic', 'billing');
+insert into ADDRESS_table (ID_address, ID_customer, city, street, postal_number, country, address_type)
+values (1000004, 5, 'Olomouc', 'Třída Svobody 7', '77900', 'Czech Republic', 'delivery');
+insert into ADDRESS_table (ID_address, ID_customer, city, street, postal_number, country, address_type)
+values (1000005, 6, 'Bratislava', 'Obchodná 45', '81106', 'Slovakia', 'billing');
+insert into ADDRESS_table (ID_address, ID_customer, city, street, postal_number, country, address_type)
+values (1000006, 7, 'Košice', 'Hlavná 62', '04001', 'Slovakia', 'delivery');
+insert into ADDRESS_table (ID_address, ID_customer, city, street, postal_number, country, address_type)
+values (1000007, 8, 'České Budějovice', 'Piaristická 18', '37001', 'Czech Republic', 'billing');
+insert into ADDRESS_table (ID_address, ID_customer, city, street, postal_number, country, address_type)
+values (1000008, 9, 'Liberec', 'Moskevská 34', '46001', 'Czech Republic', 'delivery');
+insert into ADDRESS_table (ID_address, ID_customer, city, street, postal_number, country, address_type)
+values (1000009, 10, 'Žilina', 'Národná 11', '01001', 'Slovakia', 'billing');
 
 --Product categories:
-insert into PRODUCT_CATEGORY (ID_CATEGORY, category_name, category_description)
+insert into PRODUCT_CATEGORY (ID_category, category_name, category_description)
 values (1000, 'Running', 'Engineered for peak performance—trusted by elite runners and welcoming for beginners.');
-insert into PRODUCT_CATEGORY (ID_CATEGORY, category_name, category_description)
+insert into PRODUCT_CATEGORY (ID_category, category_name, category_description)
 values (1001, 'Swimming', 'Built to glide through every lap, whether you are chasing personal records or enjoying a relaxed swim.');
-insert into PRODUCT_CATEGORY (ID_CATEGORY, category_name, category_description)
-values (1002, 'Cycling', 'Made to elevate every kilometer, whether you are conquering climbs or cruising city streets.');
+insert into PRODUCT_CATEGORY (ID_category, category_name, category_description)
+values (1002, 'Cycling', 'Gear and accessories for road, mountain, and recreational cycling.');
+insert into PRODUCT_CATEGORY (ID_category, category_name, category_description)
+values (1003, 'Fitness', 'Equipment and apparel designed for gym workouts and home training.');
+insert into PRODUCT_CATEGORY (ID_category, category_name, category_description)
+values (1004, 'Hiking', 'Durable footwear and clothing built for trails and outdoor adventures.');
 
 --Products:
 
 --Running category:
---Running category:
 insert into PRODUCT_table (ID_product, ID_category, product_name, price, product_description, DPH, activity)
 values (2000, 1000, 'Addidas Adizero Evo SL', 3239, 'Feather-light speed for every stride.', 21, 1);
 insert into PRODUCT_table (ID_product, ID_category, product_name, price, product_description, DPH, activity)
-values (2001, 1000, 'Nike Zoom Fly 6', 3239, 'Feather-light speed for every stride.', 21, 1);
+values (2001, 1000, 'Nike Air Zoom Pegasus 41', 2999, 'Responsive cushioning for long-distance comfort.', 21, 1);
 insert into PRODUCT_table (ID_product, ID_category, product_name, price, product_description, DPH, activity)
-values (2002, 1000, 'Asics Gel Nimbus 26', 3899, 'Soft cushioning for long-distance comfort.', 21, 1);
+values (2002, 1000, 'Asics Gel-Kayano 31', 3499, 'Maximum stability and support for overpronators.', 21, 1);
 insert into PRODUCT_table (ID_product, ID_category, product_name, price, product_description, DPH, activity)
-values (2003, 1000, 'New Balance Fresh Foam 1080v13', 4199, 'Smooth, plush ride for everyday training.', 21, 1);
+values (2003, 1000, 'Brooks Ghost 16', 2799, 'Soft and smooth ride for neutral everyday runners.', 21, 1);
 insert into PRODUCT_table (ID_product, ID_category, product_name, price, product_description, DPH, activity)
-values (2004, 1000, 'Puma Deviate Nitro 2', 3599, 'Responsive propulsion for faster runs.', 21, 1);
+values (2004, 1000, 'New Balance Fresh Foam X 1080v13', 3899, 'Plush underfoot feel engineered for high-mileage training.', 21, 1);
 insert into PRODUCT_table (ID_product, ID_category, product_name, price, product_description, DPH, activity)
-values (2005, 1000, 'Hoka Clifton 9', 3499, 'Lightweight cushioning for effortless miles.', 21, 1);
+values (2005, 1000, 'Saucony Endorphin Speed 4', 3299, 'Lightweight nylon plate for a propulsive, fast ride.', 21, 1);
 insert into PRODUCT_table (ID_product, ID_category, product_name, price, product_description, DPH, activity)
-values (2006, 1000, 'Saucony Endorphin Speed 4', 4299, 'Versatile speed shoe with energetic rebound.', 21, 1);
+values (2006, 1000, 'Hoka Clifton 9', 3199, 'Ultra-cushioned yet lightweight design for everyday miles.', 21, 1);
 insert into PRODUCT_table (ID_product, ID_category, product_name, price, product_description, DPH, activity)
-values (2007, 1000, 'Brooks Ghost 16', 3299, 'Balanced cushioning for smooth daily runs.', 21, 1);
+values (2007, 1000, 'Puma Deviate Nitro 3', 2899, 'Nitrogen-infused foam for explosive energy return.', 21, 0);
+insert into PRODUCT_table (ID_product, ID_category, product_name, price, product_description, DPH, activity)
+values (2008, 1000, 'On Cloudmonster 2', 3599, 'Oversized CloudTec cushioning for a bouncy, effortless run.', 21, 1);
 
 --Swimming category:
 insert into PRODUCT_table (ID_product, ID_category, product_name, price, product_description, DPH, activity)
-values (3000, 1001, 'Speedo Biofuse Training Fins', 899, 'Comfortable training fins for improved kick strength.', 21, 1);
+values (3001, 1001, 'Arena Cobra Ultra Swipe', 1299, 'Competition-grade goggles with wide panoramic vision.', 21, 1);
 insert into PRODUCT_table (ID_product, ID_category, product_name, price, product_description, DPH, activity)
-values (3001, 1001, 'Arena Powerfin Pro', 1199, 'Short-blade fins designed for explosive power.', 21, 1);
+values (3002, 1001, 'Speedo Fastskin LZR Pure Valor', 3999, 'Hydrodynamic racing suit for elite competitive swimmers.', 21, 1);
 insert into PRODUCT_table (ID_product, ID_category, product_name, price, product_description, DPH, activity)
-values (3002, 1001, 'Finis Long Floating Fins', 999, 'Long fins ideal for technique and endurance training.', 21, 1);
+values (3003, 1001, 'TYR Catalyst Training Paddles', 499, 'Ergonomic paddles to build upper body pulling strength.', 21, 1);
 insert into PRODUCT_table (ID_product, ID_category, product_name, price, product_description, DPH, activity)
-values (3003, 1001, 'TYR Stryker Silicone Fins', 1099, 'Soft silicone construction for natural movement.', 21, 1);
+values (3004, 1001, 'Aqua Sphere Pull Buoy Pro', 399, 'High-density foam float for focused arm stroke training.', 21, 1);
 insert into PRODUCT_table (ID_product, ID_category, product_name, price, product_description, DPH, activity)
-values (3004, 1001, 'Mad Wave Pool Fins', 849, 'Short training fins for increased kick tempo.', 21, 1);
+values (3005, 1001, 'Speedo Aquabeat MP3 Waterproof Player', 2199, 'Waterproof music player built for swimmers on every lap.', 21, 0);
 insert into PRODUCT_table (ID_product, ID_category, product_name, price, product_description, DPH, activity)
-values (3005, 1001, 'Cressi Light Swim Fins', 799, 'Lightweight fins suitable for pool and open water.', 21, 1);
+values (3006, 1001, 'Nike Swim Hydroguard Rash Guard', 899, 'UV-protective rash guard for open water and pool use.', 21, 1);
 
 --Cycling category:
 insert into PRODUCT_table (ID_product, ID_category, product_name, price, product_description, DPH, activity)
 values (4001, 1002, 'Specialized Tarmac SL7', 129999, 'Aero efficiency and lightweight performance in one frame.', 21, 1);
 insert into PRODUCT_table (ID_product, ID_category, product_name, price, product_description, DPH, activity)
-values (4002, 1002, 'Cannondale SuperSix EVO 4', 114999, 'Balanced stiffness and comfort for fast road riding.', 21, 1);
+values (4002, 1002, 'Garmin Edge 840 Solar', 12999, 'Solar-charging GPS cycling computer with advanced navigation.', 21, 1);
 insert into PRODUCT_table (ID_product, ID_category, product_name, price, product_description, DPH, activity)
-values (4003, 1002, 'Trek Émonda SL 6', 109999, 'Ultra‑light climbing bike with race‑ready geometry.', 21, 1);
+values (4003, 1002, 'Shimano RC7 Road Cycling Shoes', 4499, 'Stiff carbon sole for efficient power transfer on every climb.', 21, 1);
 insert into PRODUCT_table (ID_product, ID_category, product_name, price, product_description, DPH, activity)
-values (4004, 1002, 'Giant TCR Advanced 2', 89999, 'Efficient all‑rounder built for speed and precision.', 21, 1);
+values (4004, 1002, 'Castelli Competizione Kit', 3799, 'Aerodynamic race suit designed for maximum speed on the road.', 21, 1);
 insert into PRODUCT_table (ID_product, ID_category, product_name, price, product_description, DPH, activity)
-values (4005, 1002, 'Bianchi Sprint 105', 94999, 'Classic Italian design with modern race performance.', 21, 1);
+values (4005, 1002, 'Bontrager Ballista MIPS Helmet', 5999, 'Lightweight aero helmet with integrated MIPS safety system.', 21, 1);
 insert into PRODUCT_table (ID_product, ID_category, product_name, price, product_description, DPH, activity)
-values (4006, 1002, 'Canyon Ultimate CF SL 7', 104999, 'Lightweight carbon frame with excellent handling.', 21, 1);
+values (4006, 1002, 'Wahoo KICKR Smart Trainer', 28999, 'High-precision indoor smart trainer for immersive cycling simulation.', 21, 0);
+insert into PRODUCT_table (ID_product, ID_category, product_name, price, product_description, DPH, activity)
+values (4007, 1002, 'Continental Grand Prix 5000 TL', 1599, 'Tubeless road tyre with exceptional grip and low rolling resistance.', 21, 1);
 
 --Shopping carts:
-insert into SHOPPING_CART(ID_shopping_cart, ID_customer, shopping_cart_status)
+insert into SHOPPING_CART (ID_shopping_cart, ID_customer, shopping_cart_status)
 values (50000, 1, 1);
-insert into SHOPPING_CART(ID_shopping_cart, ID_customer, shopping_cart_status)
+insert into SHOPPING_CART (ID_shopping_cart, ID_customer, shopping_cart_status)
 values (50001, 2, 1);
-insert into SHOPPING_CART(ID_shopping_cart, ID_customer, shopping_cart_status)
-values (50002, 3, 0);
-insert into SHOPPING_CART(ID_shopping_cart, ID_customer, shopping_cart_status)
-values (50003, 4, 1);
-insert into SHOPPING_CART(ID_shopping_cart, ID_customer, shopping_cart_status)
-values (50004, 5, 0);
-insert into SHOPPING_CART(ID_shopping_cart, ID_customer, shopping_cart_status)
+insert into SHOPPING_CART (ID_shopping_cart, ID_customer, shopping_cart_status)
+values (50002, 3, 1);
+insert into SHOPPING_CART (ID_shopping_cart, ID_customer, shopping_cart_status)
+values (50003, 4, 0);
+insert into SHOPPING_CART (ID_shopping_cart, ID_customer, shopping_cart_status)
+values (50004, 5, 1);
+insert into SHOPPING_CART (ID_shopping_cart, ID_customer, shopping_cart_status)
 values (50005, 6, 1);
-insert into SHOPPING_CART(ID_shopping_cart, ID_customer, shopping_cart_status)
+insert into SHOPPING_CART (ID_shopping_cart, ID_customer, shopping_cart_status)
 values (50006, 7, 0);
-insert into SHOPPING_CART(ID_shopping_cart, ID_customer, shopping_cart_status)
+insert into SHOPPING_CART (ID_shopping_cart, ID_customer, shopping_cart_status)
 values (50007, 8, 1);
-insert into SHOPPING_CART(ID_shopping_cart, ID_customer, shopping_cart_status)
+insert into SHOPPING_CART (ID_shopping_cart, ID_customer, shopping_cart_status)
 values (50008, 9, 1);
+insert into SHOPPING_CART (ID_shopping_cart, ID_customer, shopping_cart_status)
+values (50009, 10, 0);
 
---Shopping carts items:
-insert into SHOPPING_CART_ITEM(ID_shopping_cart_item, ID_shopping_cart, ID_product, quantity, price_at_insertion, date_added_to_cart)
-values (60000, 50000, 2002, 1, 3899, DATE '2026-03-04');
-insert into SHOPPING_CART_ITEM(ID_shopping_cart_item, ID_shopping_cart, ID_product, quantity, price_at_insertion, date_added_to_cart)
-values (60001, 50000, 3001, 1, 1199, DATE '2026-03-04');
-insert into SHOPPING_CART_ITEM(ID_shopping_cart_item, ID_shopping_cart, ID_product, quantity, price_at_insertion, date_added_to_cart)
-values (60002, 50001, 2005, 1, 3499, DATE '2026-03-03');
-insert into SHOPPING_CART_ITEM(ID_shopping_cart_item, ID_shopping_cart, ID_product, quantity, price_at_insertion, date_added_to_cart)
-values (60003, 50003, 4004, 1, 89999, DATE '2026-02-28');
-insert into SHOPPING_CART_ITEM(ID_shopping_cart_item, ID_shopping_cart, ID_product, quantity, price_at_insertion, date_added_to_cart)
-values (60004, 50005, 3003, 1, 1099, DATE '2026-03-01');
-insert into SHOPPING_CART_ITEM(ID_shopping_cart_item, ID_shopping_cart, ID_product, quantity, price_at_insertion, date_added_to_cart)
-values (60005, 50007, 2007, 1, 3299, DATE '2026-02-26');
-insert into SHOPPING_CART_ITEM(ID_shopping_cart_item, ID_shopping_cart, ID_product, quantity, price_at_insertion, date_added_to_cart)
-values (60006, 50008, 4002, 1, 114999, DATE '2026-03-04');
-insert into SHOPPING_CART_ITEM(ID_shopping_cart_item, ID_shopping_cart, ID_product, quantity, price_at_insertion, date_added_to_cart)
-values (60007, 50008, 3005, 1, 799, DATE '2026-03-04');
+--Shopping cart items:
+insert into SHOPPING_CART_ITEM (ID_shopping_cart_item, ID_shopping_cart, ID_product, quantity, price_at_insertion, date_added_to_cart)
+values (60000, 50000, 2002, 1, 3499, DATE '2026-03-04');
+insert into SHOPPING_CART_ITEM (ID_shopping_cart_item, ID_shopping_cart, ID_product, quantity, price_at_insertion, date_added_to_cart)
+values (60001, 50000, 3001, 1, 1299, DATE '2026-03-04');
+insert into SHOPPING_CART_ITEM (ID_shopping_cart_item, ID_shopping_cart, ID_product, quantity, price_at_insertion, date_added_to_cart)
+values (60002, 50001, 2001, 1, 2999, DATE '2026-03-05');
+insert into SHOPPING_CART_ITEM (ID_shopping_cart_item, ID_shopping_cart, ID_product, quantity, price_at_insertion, date_added_to_cart)
+values (60003, 50001, 4003, 1, 4499, DATE '2026-03-05');
+insert into SHOPPING_CART_ITEM (ID_shopping_cart_item, ID_shopping_cart, ID_product, quantity, price_at_insertion, date_added_to_cart)
+values (60004, 50002, 2005, 2, 3299, DATE '2026-03-07');
+insert into SHOPPING_CART_ITEM (ID_shopping_cart_item, ID_shopping_cart, ID_product, quantity, price_at_insertion, date_added_to_cart)
+values (60005, 50002, 3003, 1, 499, DATE '2026-03-07');
+insert into SHOPPING_CART_ITEM (ID_shopping_cart_item, ID_shopping_cart, ID_product, quantity, price_at_insertion, date_added_to_cart)
+values (60006, 50003, 4005, 1, 5999, DATE '2026-03-09');
+insert into SHOPPING_CART_ITEM (ID_shopping_cart_item, ID_shopping_cart, ID_product, quantity, price_at_insertion, date_added_to_cart)
+values (60007, 50004, 2007, 1, 2899, DATE '2026-03-11');
+insert into SHOPPING_CART_ITEM (ID_shopping_cart_item, ID_shopping_cart, ID_product, quantity, price_at_insertion, date_added_to_cart)
+values (60008, 50004, 3004, 2, 399, DATE '2026-03-11');
+insert into SHOPPING_CART_ITEM (ID_shopping_cart_item, ID_shopping_cart, ID_product, quantity, price_at_insertion, date_added_to_cart)
+values (60009, 50005, 2003, 1, 2799, DATE '2026-03-13');
 
 --Orders:
 insert into ORDER_table (ID_order, ID_customer, date_created, order_state, total_amount)
-values (70000, 1, DATE '2026-03-05', 1, 5098);
+values (70000, 1, DATE '2026-03-05', 1, 4798);
 insert into ORDER_table (ID_order, ID_customer, date_created, order_state, total_amount)
-values (70001, 2, DATE '2026-03-05', 1, 3499);
+values (70001, 2, DATE '2026-03-05', 1, 7498);
 insert into ORDER_table (ID_order, ID_customer, date_created, order_state, total_amount)
-values (70002, 4, DATE '2026-03-01', 1, 89999);
+values (70002, 3, DATE '2026-03-07', 1, 2799);
 insert into ORDER_table (ID_order, ID_customer, date_created, order_state, total_amount)
-values (70003, 6, DATE '2026-03-02', 1, 1099);
+values (70003, 4, DATE '2026-03-08', 0, 6997);
 insert into ORDER_table (ID_order, ID_customer, date_created, order_state, total_amount)
-values (70004, 8, DATE '2026-02-26', 1, 3299);
+values (70004, 5, DATE '2026-03-10', 1, 7198);
 insert into ORDER_table (ID_order, ID_customer, date_created, order_state, total_amount)
-values (70005, 9, DATE '2026-03-04', 1, 115798);
+values (70005, 6, DATE '2026-03-12', 1, 1599);
+insert into ORDER_table (ID_order, ID_customer, date_created, order_state, total_amount)
+values (70006, 8, DATE '2026-03-15', 0, 8298);
+insert into ORDER_table (ID_order, ID_customer, date_created, order_state, total_amount)
+values (70007, 9, DATE '2026-03-18', 1, 1599);
 
 --Order items:
---Order 70000 (Customer 1, Cart 50000)
+--Order 70000 (Customer 1): 3499 + 1299 = 4798
 insert into ORDER_ITEM (ID_order_item, ID_product, ID_order, quantity, selling_price)
-values (80000, 2002, 70000, 1, 3899);
+values (80000, 2002, 70000, 1, 3499);
 insert into ORDER_ITEM (ID_order_item, ID_product, ID_order, quantity, selling_price)
-values (80001, 3001, 70000, 1, 1199);
---Order 70001 (Customer 2, Cart 50001)
+values (80001, 3001, 70000, 1, 1299);
+--Order 70001 (Customer 2): 2999 + 4499 = 7498
 insert into ORDER_ITEM (ID_order_item, ID_product, ID_order, quantity, selling_price)
-values (80002, 2005, 70001, 1, 3499);
---Order 70002 (Customer 4, Cart 50003)
+values (80002, 2001, 70001, 1, 2999);
 insert into ORDER_ITEM (ID_order_item, ID_product, ID_order, quantity, selling_price)
-values (80003, 4004, 70002, 1, 89999);
---Order 70003 (Customer 6, Cart 50005)
+values (80003, 4003, 70001, 1, 4499);
+--Order 70002 (Customer 3): 2799
 insert into ORDER_ITEM (ID_order_item, ID_product, ID_order, quantity, selling_price)
-values (80004, 3003, 70003, 1, 1099);
---Order 70004 (Customer 8, Cart 50007)
+values (80004, 2003, 70002, 1, 2799);
+--Order 70003 (Customer 4): 2*499 + 5999 = 6997
 insert into ORDER_ITEM (ID_order_item, ID_product, ID_order, quantity, selling_price)
-values (80005, 2007, 70004, 1, 3299);
---Order 70005 (Customer 9, Cart 50008)
+values (80005, 3003, 70003, 2, 499);
 insert into ORDER_ITEM (ID_order_item, ID_product, ID_order, quantity, selling_price)
-values (80006, 4002, 70005, 1, 114999);
+values (80006, 4005, 70003, 1, 5999);
+--Order 70004 (Customer 5): 3199 + 3999 = 7198
 insert into ORDER_ITEM (ID_order_item, ID_product, ID_order, quantity, selling_price)
-values (80007, 3005, 70005, 1, 799);
+values (80007, 2006, 70004, 1, 3199);
+insert into ORDER_ITEM (ID_order_item, ID_product, ID_order, quantity, selling_price)
+values (80008, 3002, 70004, 1, 3999);
+--Order 70005 (Customer 6): 1599
+insert into ORDER_ITEM (ID_order_item, ID_product, ID_order, quantity, selling_price)
+values (80009, 4007, 70005, 1, 1599);
+--Order 70006 (Customer 8): 4499 + 3799 = 8298
+insert into ORDER_ITEM (ID_order_item, ID_product, ID_order, quantity, selling_price)
+values (80010, 4003, 70006, 1, 4499);
+insert into ORDER_ITEM (ID_order_item, ID_product, ID_order, quantity, selling_price)
+values (80011, 4004, 70006, 1, 3799);
+--Order 70007 (Customer 9): 1599
+insert into ORDER_ITEM (ID_order_item, ID_product, ID_order, quantity, selling_price)
+values (80012, 4007, 70007, 1, 1599);
 
 --Payments (disjoint + total specialization):
 insert into PAYMENT (ID_payment, ID_order, payment_date, total_amount, order_state, payment_type, authorization_code, card_last4)
-values (90000, 70000, DATE '2026-03-05', 5098, 1, 'CARD', 'AUTH-70000-A1', '1111');
+values (90000, 70000, DATE '2026-03-05', 4798, 1, 'CARD', 'AUTH-70000-A1', '1111');
 insert into PAYMENT (ID_payment, ID_order, payment_date, total_amount, order_state, payment_type, iban, variable_symbol)
-values (90001, 70001, DATE '2026-03-05', 3499, 1, 'BANK_TRANSFER', 'CZ6508000000192000145399', '70001');
+values (90001, 70001, DATE '2026-03-05', 7498, 1, 'BANK_TRANSFER', 'CZ6508000000192000145399', '70001');
 insert into PAYMENT (ID_payment, ID_order, payment_date, total_amount, order_state, payment_type, authorization_code, card_last4)
-values (90002, 70002, DATE '2026-03-01', 89999, 1, 'CARD', 'AUTH-70002-B7', '1111');
+values (90002, 70002, DATE '2026-03-07', 2799, 1, 'CARD', 'AUTH-70002-B3', '4827');
 insert into PAYMENT (ID_payment, ID_order, payment_date, total_amount, order_state, payment_type, iban, variable_symbol)
-values (90003, 70003, DATE '2026-03-02', 1099, 1, 'BANK_TRANSFER', 'CZ0303000000000000112233', '70003');
+values (90003, 70003, DATE '2026-03-08', 6997, 0, 'BANK_TRANSFER', 'SK3112000000198742637541', '70003');
 insert into PAYMENT (ID_payment, ID_order, payment_date, total_amount, order_state, payment_type, authorization_code, card_last4)
-values (90004, 70004, DATE '2026-02-26', 3299, 1, 'CARD', 'AUTH-70004-C3', '0002');
+values (90004, 70004, DATE '2026-03-10', 7198, 1, 'CARD', 'AUTH-70004-C5', '3391');
 insert into PAYMENT (ID_payment, ID_order, payment_date, total_amount, order_state, payment_type, iban, variable_symbol)
-values (90005, 70005, DATE '2026-03-04', 115798, 1, 'BANK_TRANSFER', 'CZ2010100000000011223344', '70005');
+values (90005, 70005, DATE '2026-03-12', 1599, 1, 'BANK_TRANSFER', 'SK8975000000002134876520', '70005');
+insert into PAYMENT (ID_payment, ID_order, payment_date, total_amount, order_state, payment_type, authorization_code, card_last4)
+values (90006, 70006, DATE '2026-03-15', 8298, 0, 'CARD', 'AUTH-70006-D7', '7754');
+insert into PAYMENT (ID_payment, ID_order, payment_date, total_amount, order_state, payment_type, iban, variable_symbol)
+values (90007, 70007, DATE '2026-03-18', 1599, 1, 'BANK_TRANSFER', 'CZ5520100000002401107148', '70007');
 
 commit;
