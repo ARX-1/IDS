@@ -41,8 +41,6 @@ begin
 end;
 /
 
-
-
 --TABLES
 
 create table CUSTOMER (
@@ -54,9 +52,10 @@ create table CUSTOMER (
     registration_date date,
     user_status number(1),
     password_hash varchar2(255),
+
     -- restrictions: 
     CONSTRAINT PK_ID_customer_check primary key (ID_customer),
-    CONSTRAINT email_check check (REGEXP_LIKE(email, '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$')), -- generated format
+    CONSTRAINT email_check check (REGEXP_LIKE(email, '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$')),
     CONSTRAINT user_status_check  check (user_status in (0, 1))
 );
 
@@ -64,12 +63,11 @@ create table SHOPPING_CART(
     ID_shopping_cart int not null,  -- PK
     ID_customer int not null,       -- FK
     date_created date default sysdate,
-    --date_created DATE DEFAULT SYSDATE, --should automatically add real time
     shopping_cart_status number(1),
 
     --restrictions:
     CONSTRAINT PK_ID_shopping_cart_check primary key (ID_shopping_cart),
-    
+
     --foreign key
     CONSTRAINT FK_ID_cart_customer_check foreign key (ID_customer) references CUSTOMER(ID_customer),
     CONSTRAINT shopping_cart_status_check check (shopping_cart_status in (0, 1))
@@ -120,26 +118,25 @@ create table PRODUCT_table(
 create table ORDER_table(
     ID_order int not null,         --PK
     ID_customer int not null,      --FK
-    --ID_shopping_cart int not null, --FK TODO: might remove this
     date_created date default sysdate,
     order_state number(1), --1 if paid, 0 otherwise
-    total_amount int, --TODO: restrict that this cannot be 0
+    total_amount int,
 
     --restrictions:
     CONSTRAINT PK_ID_order_check primary key (ID_order),
   
     --foregin keys:
     CONSTRAINT FK_ID_order_customer_check foreign key (ID_customer) references CUSTOMER(ID_customer),
-    --CONSTRAINT FK_ID_order_shopping_cart_check foreign key (ID_shopping_cart) references SHOPPING_CART(ID_shopping_cart),
-    CONSTRAINT order_state_check check (order_state in (0, 1))
+    CONSTRAINT order_state_check check (order_state in (0, 1)),
+    CONSTRAINT order_total_amount_check check (total_amount > 0)
 );
 
 create table PAYMENT(
     ID_payment int not null,    --PK
     ID_order int not null,      --FK
-    payment_date date default sysdate, --DDMMYYYY
-    total_amount int, --TODO: same as in the ORDER
-    order_state number(1), --1 if paid, 0 otherwise, same as ORDER, duplicity..? TODO: !!!!
+    payment_date date default sysdate, 
+    total_amount int,
+    order_state number(1), --1 if paid, 0 otherwise
     payment_type varchar2(20) not null,
     authorization_code varchar2(30),
     card_last4 char(4),
@@ -152,10 +149,7 @@ create table PAYMENT(
     --foreign keys:
     CONSTRAINT FK_ID_payment_order_check foreign key (ID_order) references ORDER_table(ID_order),
     CONSTRAINT payment_order_state_check check(order_state in (0, 1)),
-    --Generalization/specialization (PAYMENT -> CARD, BANK_TRANSFER):
-    --Implemented as single table with discriminator payment_type.
-    --This CHECK enforces TOTAL specialization (every payment has exactly one subtype)
-    --and DISJOINT specialization (cannot be CARD and BANK_TRANSFER at the same time).
+    CONSTRAINT payment_total_amount_check check (total_amount > 0),
     CONSTRAINT payment_type_check check (payment_type in ('CARD', 'BANK_TRANSFER')),
     CONSTRAINT card_last4_format_check check (card_last4 is null or REGEXP_LIKE(card_last4, '^[0-9]{4}$')),
     CONSTRAINT iban_format_check check (iban is null or REGEXP_LIKE(iban, '^[A-Z]{2}[0-9A-Z]{13,32}$')),
@@ -202,8 +196,7 @@ create table ORDER_ITEM(
     CONSTRAINT FK_ID_order_check foreign key (ID_order) references ORDER_table(ID_order)
 );
 
---Automatic PK generation for all main tables. If PK is omitted or NULL in INSERT,
---the trigger assigns a value from the corresponding sequence.
+--Automatic PK generation for all main tables
 create sequence SEQ_CUSTOMER_ID start with 10 increment by 1 nocache;
 create sequence SEQ_SHOPPING_CART_ID start with 50009 increment by 1 nocache;
 create sequence SEQ_ADDRESS_ID start with 1000009 increment by 1 nocache;
@@ -480,7 +473,7 @@ values (80006, 4002, 70005, 1, 114999);
 insert into ORDER_ITEM (ID_order_item, ID_product, ID_order, quantity, selling_price)
 values (80007, 3005, 70005, 1, 799);
 
---Payments (disjoint + total specialization demo):
+--Payments (disjoint + total specialization):
 insert into PAYMENT (ID_payment, ID_order, payment_date, total_amount, order_state, payment_type, authorization_code, card_last4)
 values (90000, 70000, DATE '2026-03-05', 5098, 1, 'CARD', 'AUTH-70000-A1', '1111');
 insert into PAYMENT (ID_payment, ID_order, payment_date, total_amount, order_state, payment_type, iban, variable_symbol)
@@ -493,6 +486,5 @@ insert into PAYMENT (ID_payment, ID_order, payment_date, total_amount, order_sta
 values (90004, 70004, DATE '2026-02-26', 3299, 1, 'CARD', 'AUTH-70004-C3', '0002');
 insert into PAYMENT (ID_payment, ID_order, payment_date, total_amount, order_state, payment_type, iban, variable_symbol)
 values (90005, 70005, DATE '2026-03-04', 115798, 1, 'BANK_TRANSFER', 'CZ2010100000000011223344', '70005');
-
 
 commit;
