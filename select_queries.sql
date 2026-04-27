@@ -169,7 +169,6 @@ create table PAYMENT(
     )
 );
 
---TODO: add tables for shopping_cart_item, order_item
 create table SHOPPING_CART_ITEM(
     ID_shopping_cart_item int not null,     --PK
     ID_shopping_cart int not null,          --FK
@@ -540,23 +539,117 @@ values (90007, 70007, DATE '2026-03-18', 1599, 1, 'BANK_TRANSFER', 'CZ5520100000
 
 commit;
 
-/*
-GEN AI usage:
+--SELECT QUERIES
 
-We used AI to generate additional sample data for our database.
-We have created first 2 rows of each table manually, then we used AI to generate more rows based on our initial data.
-Thanks to this approach we were able to quickly fill our database without spending too much time on repetetive manual work.
-We have reviewed all the AI generated data and ensured that it is consistent with our database scheme.
+-- Dotaz 1 (JOIN 2 tabulek: ORDER_table + CUSTOMER)
+-- Zobrazí všechny objednávky spolu s celým jménem a e-mailem zákazníka, který je zadal.
+-- Využití v aplikaci: stránka správy objednávek v administraci – přehled, kdo a kdy
+-- co objednal a zda je objednávka zaplacena.
+SELECT
+    o.ID_order,
+    c.customer_name || ' ' || c.customer_surname  AS customer_fullname,
+    c.email,
+    o.date_created,
+    o.total_amount,
+    CASE o.order_state WHEN 1 THEN 'Paid' ELSE 'Unpaid' END AS order_status
+FROM ORDER_table o
+JOIN CUSTOMER c ON o.ID_customer = c.ID_customer
+ORDER BY o.date_created DESC;
 
-Problems we encountered:
-We had to modify indentation because the generated insert statements were in the same line as values
-  so the lines were too long and hard to read for humans, we could fix it by changing the prompt but
-  we decided to do it manually because we wanted to check the generated data anyway.
+-- Dotaz 2 (JOIN 2 tabulek: PRODUCT_table + PRODUCT_CATEGORY)
+-- Vypíše všechny aktivní produkty spolu s názvem jejich kategorie a cenou.
+-- Využití v aplikaci: výpis produktů na e-shopu seřazený podle kategorie a ceny.
+SELECT
+    p.ID_product,
+    p.product_name,
+    pc.category_name,
+    p.price,
+    p.DPH
+FROM PRODUCT_table p
+JOIN PRODUCT_CATEGORY pc ON p.ID_category = pc.ID_category
+WHERE p.activity = 1
+ORDER BY pc.category_name, p.price;
 
-Because the sample data is not that important and it is only used as examples and testing later on in the project,
-there was no need to verify the data with real world sources. We just wanted to have realistic looking data that fits
-well with our theme.
+-- Dotaz 3 (JOIN 4 tabulek: ORDER_ITEM + ORDER_table + CUSTOMER + PRODUCT_table)
+-- Generuje detailní prodejní přehled: ke každé položce objednávky zobrazí zákazníka,
+-- datum objednávky, název produktu a celkovou cenu řádku (množství × prodejní cena).
+-- Využití v aplikaci: generování prodejních reportů v administraci.
+SELECT
+    o.ID_order,
+    c.customer_name || ' ' || c.customer_surname  AS customer_fullname,
+    o.date_created,
+    p.product_name,
+    oi.quantity,
+    oi.selling_price,
+    oi.quantity * oi.selling_price AS line_total
+FROM ORDER_ITEM oi
+JOIN ORDER_table o ON oi.ID_order = o.ID_order
+JOIN CUSTOMER c ON o.ID_customer = c.ID_customer
+JOIN PRODUCT_table p ON oi.ID_product = p.ID_product
+ORDER BY o.date_created, o.ID_order;
 
-Used AI tool: Claude sonnet 4.6
-Conversation link: "https://claude.ai/share/3b0e902e-c335-430f-9bdf-e855bf2641b1"
-*/
+-- Dotaz 4 (GROUP BY + agregační funkce: SUM, COUNT)
+-- Spočítá celkovou útratu a počet zaplacených objednávek pro každého zákazníka.
+-- Využití v aplikaci: identifikace nejlepších zákazníků pro věrnostní program nebo cílené akce.
+SELECT
+    c.ID_customer,
+    c.customer_name || ' ' || c.customer_surname AS customer_fullname,
+    COUNT(o.ID_order) AS paid_order_count,
+    SUM(o.total_amount) AS total_spent
+FROM CUSTOMER c
+JOIN ORDER_table o ON c.ID_customer = o.ID_customer
+WHERE o.order_state = 1
+GROUP BY c.ID_customer, c.customer_name, c.customer_surname
+ORDER BY total_spent DESC;
+
+-- Dotaz 5 (GROUP BY + agregační funkce: COUNT, AVG, MIN, MAX)
+-- Zobrazí počet aktivních produktů a jejich cenové statistiky (průměr, minimum, maximum)
+-- v každé kategorii.
+-- Využití v aplikaci: přehledová stránka kategorií se statistikami produktů.
+SELECT
+    pc.category_name,
+    COUNT(p.ID_product) AS product_count,
+    AVG(p.price) AS avg_price,
+    MIN(p.price) AS min_price,
+    MAX(p.price) AS max_price
+FROM PRODUCT_CATEGORY pc
+JOIN PRODUCT_table p ON pc.ID_category = p.ID_category
+WHERE p.activity = 1
+GROUP BY pc.ID_category, pc.category_name
+ORDER BY product_count DESC;
+
+-- Dotaz 6 (EXISTS)
+-- Najde všechny aktivní zákazníky (user_status = 1), kteří mají alespoň jednu
+-- zaplacenou objednávku (order_state = 1).
+-- Využití v aplikaci: sestavení mailing listu ověřených kupujících pro newslettery
+-- nebo věrnostní kampaně.
+SELECT
+    c.ID_customer,
+    c.customer_name,
+    c.customer_surname,
+    c.email
+FROM CUSTOMER c
+WHERE c.user_status = 1
+  AND EXISTS (
+      SELECT 1
+      FROM ORDER_table o
+      WHERE o.ID_customer = c.ID_customer
+        AND o.order_state = 1
+  )
+ORDER BY c.customer_surname;
+
+-- Dotaz 7 (IN s vnořeným SELECTem)
+-- Vrátí všechny produkty, které byly alespoň jednou zakoupeny (figurují v některé objednávce).
+-- Využití v aplikaci: administrátorský dashboard – rozlišení prodávaných produktů
+-- od těch, o které zatím nebyl zájem.
+SELECT
+    p.ID_product,
+    p.product_name,
+    p.price,
+    CASE p.activity WHEN 1 THEN 'Active' ELSE 'Inactive' END AS status
+FROM PRODUCT_table p
+WHERE p.ID_product IN (
+    SELECT DISTINCT oi.ID_product
+    FROM ORDER_ITEM oi
+)
+ORDER BY p.price DESC;
