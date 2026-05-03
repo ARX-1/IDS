@@ -669,17 +669,15 @@ ORDER BY p.price DESC;
 
 SET SERVEROUTPUT ON;
 
--- ============================================================
 -- TRIGGER 1: TRG_CART_ITEM_CHECK_PRICE
 -- BEFORE INSERT OR UPDATE na SHOPPING_CART_ITEM.
 -- Funkce:
---   1. Ověří, že quantity > 0.
---   2. Načte aktuální katalogovou cenu produktu z PRODUCT_table.
---   3. Pokud price_at_insertion není zadáno (NULL), doplní ho automaticky.
---   4. Pokud price_at_insertion zadáno je, zkontroluje shodu s katalogem.
+-- 1. Ověří, že quantity > 0.
+-- 2. Načte aktuální katalogovou cenu produktu z PRODUCT_table.
+-- 3. Pokud price_at_insertion není zadáno (NULL), doplní ho automaticky.
+-- 4. Pokud price_at_insertion zadáno je, zkontroluje shodu s katalogem.
 -- Díky BEFORE triggeru se cena nastaví ještě před kontrolou NOT NULL
 -- constraintu tabulky, takže INSERT s NULL cenou projde.
--- ============================================================
 
 CREATE OR REPLACE TRIGGER TRG_CART_ITEM_CHECK_PRICE
 BEFORE INSERT OR UPDATE ON SHOPPING_CART_ITEM
@@ -711,7 +709,7 @@ END TRG_CART_ITEM_CHECK_PRICE;
 -- Předvedení TRG_CART_ITEM_CHECK_PRICE:
 -- Vložíme položku do košíku zákazníka 9 (košík 50008) BEZ zadání ceny (NULL).
 -- Trigger automaticky doplní cenu produktu 6001 (Salomon X Ultra 4 GTX = 4999 Kč).
--- ID_shopping_cart_item = NULL → TRG_SHOP_CART_ITEM_PK přiřadí hodnotu ze sekvence.
+-- ID_shopping_cart_item = NULL -> TRG_SHOP_CART_ITEM_PK přiřadí hodnotu ze sekvence.
 INSERT INTO SHOPPING_CART_ITEM
     (ID_shopping_cart_item, ID_shopping_cart, ID_product, quantity, price_at_insertion)
 VALUES (NULL, 50008, 6001, 1, NULL);
@@ -729,18 +727,16 @@ JOIN PRODUCT_table p ON sci.ID_product = p.ID_product
 WHERE sci.ID_shopping_cart = 50008
 ORDER BY sci.ID_shopping_cart_item;
 
--- ============================================================
 -- TRIGGER 2: TRG_ORDER_TOTAL_RECALC
 -- AFTER INSERT OR UPDATE OR DELETE na ORDER_ITEM.
 -- Funkce:
---   Po každé změně položek objednávky přepočítá ORDER_table.total_amount
---   jako SUM(quantity * selling_price) pro dotčenou objednávku.
---   Při UPDATE se změnou ID_order přepočítá starou i novou objednávku.
+--  Po každé změně položek objednávky přepočítá ORDER_table.total_amount
+--  jako SUM(quantity * selling_price) pro dotčenou objednávku.
+--  Při UPDATE se změnou ID_order přepočítá starou i novou objednávku.
 -- Implementace:
---   Compound trigger (Oracle 12c+) eliminuje problém "mutating table" –
---   ID dotčených objednávek se shromáždí v AFTER EACH ROW a přepočet
---   proběhne až v AFTER STATEMENT, kdy tabulka ORDER_ITEM není mutující.
--- ============================================================
+--  Compound trigger (Oracle 12c+) eliminuje problém "mutating table" –
+--  ID dotčených objednávek se shromáždí v AFTER EACH ROW a přepočet
+--  proběhne až v AFTER STATEMENT, kdy tabulka ORDER_ITEM není mutující.
 
 CREATE OR REPLACE TRIGGER TRG_ORDER_TOTAL_RECALC
 FOR INSERT OR UPDATE OR DELETE ON ORDER_ITEM
@@ -794,7 +790,7 @@ END TRG_ORDER_TOTAL_RECALC;
 -- Předvedení TRG_ORDER_TOTAL_RECALC:
 -- 1. Vložíme novou objednávku pro zákazníka 3 s dočasnou hodnotou total_amount = 1.
 -- 2. Vložíme položku ORDER_ITEM (produkt 2000, množství 2, cena 3239).
--- 3. Trigger přepočítá total_amount → 2 * 3239 = 6478.
+-- 3. Trigger přepočítá total_amount -> 2 * 3239 = 6478.
 DECLARE
     v_new_order_id ORDER_table.ID_order%TYPE;
 BEGIN
@@ -805,7 +801,7 @@ BEGIN
 
     DBMS_OUTPUT.PUT_LINE('Vlozena objednavka ID: ' || v_new_order_id || ', docasna total_amount = 1');
 
-    -- Vložení položky → TRG_ORDER_TOTAL_RECALC přepočítá total_amount
+    -- Vložení položky -> TRG_ORDER_TOTAL_RECALC přepočítá total_amount
     INSERT INTO ORDER_ITEM (ID_order_item, ID_product, ID_order, quantity, selling_price)
     VALUES (NULL, 2000, v_new_order_id, 2, 3239);
 
@@ -825,7 +821,6 @@ WHERE o.ID_customer = 3
 GROUP BY o.ID_order, o.ID_customer, o.total_amount
 ORDER BY o.ID_order DESC;
 
--- ============================================================
 -- ULOŽENÁ PROCEDURA 1: PRINT_CUSTOMER_SUMMARY
 -- Vstup: p_customer_id – ID zákazníka.
 -- Funkce:
@@ -834,7 +829,6 @@ ORDER BY o.ID_order DESC;
 --   - Spočítá celkovou útratu ze zaplacených objednávek (order_state = 1).
 --   - Výsledek vypíše přes DBMS_OUTPUT.
 -- Použité prvky: %ROWTYPE, %TYPE, výjimka NO_DATA_FOUND.
--- ============================================================
 
 CREATE OR REPLACE PROCEDURE PRINT_CUSTOMER_SUMMARY(
     p_customer_id IN CUSTOMER.ID_customer%TYPE
@@ -880,19 +874,17 @@ BEGIN
 END;
 /
 
--- ============================================================
 -- ULOŽENÁ PROCEDURA 2: CREATE_ORDER_FROM_CART
 -- Vstup: p_customer_id – ID zákazníka.
 -- Funkce:
---   - Najde aktivní košík zákazníka (shopping_cart_status = 1).
---   - Kurzorem projde položky košíku (SHOPPING_CART_ITEM).
---   - Vytvoří novou objednávku v ORDER_table (ID přes SEQ_ORDER_ID).
---   - Pro každou položku košíku vytvoří ORDER_ITEM (ID přes SEQ_ORDER_ITEM_ID).
---   - Nastaví košík jako neaktivní (shopping_cart_status = 0).
+--  Najde aktivní košík zákazníka (shopping_cart_status = 1).
+--  Kurzorem projde položky košíku (SHOPPING_CART_ITEM).
+--  Vytvoří novou objednávku v ORDER_table (ID přes SEQ_ORDER_ID).
+--  Pro každou položku košíku vytvoří ORDER_ITEM (ID přes SEQ_ORDER_ITEM_ID).
+--  Nastaví košík jako neaktivní (shopping_cart_status = 0).
 -- Použité prvky: explicitní kurzor, %TYPE, výjimky (NO_DATA_FOUND, vlastní chyby).
 -- Poznámka: TRG_ORDER_TOTAL_RECALC automaticky přepočítá total_amount
---           objednávky při vkládání každé položky.
--- ============================================================
+-- objednávky při vkládání každé položky.
 
 CREATE OR REPLACE PROCEDURE CREATE_ORDER_FROM_CART(
     p_customer_id IN CUSTOMER.ID_customer%TYPE
@@ -1001,12 +993,10 @@ JOIN ORDER_table   o  ON oi.ID_order   = o.ID_order
 WHERE o.ID_customer = 1
 ORDER BY oi.ID_order, oi.ID_order_item;
 
--- ============================================================
 -- INDEXY A EXPLAIN PLAN
 -- Dotaz: celkové tržby a počet prodaných položek podle kategorie.
 -- Joinuje: PRODUCT_CATEGORY ← PRODUCT_table ← ORDER_ITEM
 -- Agreguje: SUM(quantity * selling_price), COUNT, GROUP BY category_name.
--- ============================================================
 
 -- Krok 1: EXPLAIN PLAN před vytvořením indexů
 -- U malých ukázkových dat Oracle typicky zvolí full table scan,
@@ -1026,8 +1016,8 @@ ORDER BY total_revenue DESC;
 SELECT * FROM TABLE(DBMS_XPLAN.DISPLAY);
 
 -- Krok 2: Vytvoření indexů
--- IDX_ORDER_ITEM_PRODUCT: urychluje join ORDER_ITEM → PRODUCT_table přes ID_product
--- IDX_PRODUCT_CATEGORY:   urychluje join PRODUCT_table → PRODUCT_CATEGORY přes ID_category
+-- IDX_ORDER_ITEM_PRODUCT: urychluje join ORDER_ITEM -> PRODUCT_table přes ID_product
+-- IDX_PRODUCT_CATEGORY: urychluje join PRODUCT_table -> PRODUCT_CATEGORY přes ID_category
 CREATE INDEX IDX_ORDER_ITEM_PRODUCT ON ORDER_ITEM(ID_product);
 CREATE INDEX IDX_PRODUCT_CATEGORY   ON PRODUCT_table(ID_category);
 
@@ -1052,9 +1042,8 @@ ORDER BY total_revenue DESC;
 
 SELECT * FROM TABLE(DBMS_XPLAN.DISPLAY);
 
--- ============================================================
+
 -- PŘÍSTUPOVÁ PRÁVA PRO DRUHÉHO ČLENA TÝMU (xbadiks00)
--- ============================================================
 GRANT SELECT ON CUSTOMER           TO xbadiks00;
 GRANT SELECT ON PRODUCT_CATEGORY   TO xbadiks00;
 GRANT SELECT ON PRODUCT_table      TO xbadiks00;
@@ -1065,18 +1054,11 @@ GRANT SELECT ON SHOPPING_CART      TO xbadiks00;
 GRANT SELECT ON SHOPPING_CART_ITEM TO xbadiks00;
 GRANT SELECT ON ADDRESS_table      TO xbadiks00;
 
--- ============================================================
 -- MATERIALIZOVANY POHLED: MV_CATEGORY_SALES
 --
--- POZOR:
--- Tuto cast spousti druhy clen tymu pod svym Oracle uctem xbadiks00.
--- Pred spustenim musi prvni clen tymu xuchytj00 udelit prava pomoci GRANT prikazu
--- (viz sekce GRANT vyse – spustit pod uctem xuchytj00).
---
--- Materializovany pohled patri druhemu clenovi tymu a pouziva tabulky
--- prvniho clena pres prefix schematu xuchytj00.
--- Tato sekce se tedy nespousti pod uctem xuchytj00.
--- ============================================================
+-- Materializovany pohled patri xbadiks00 a pouziva tabulky
+-- xuchytj00 pres prefix schematu xuchytj00.
+-- Tato sekce se spousti pod uctem xbadiks00.
 
 BEGIN
     EXECUTE IMMEDIATE 'DROP MATERIALIZED VIEW MV_CATEGORY_SALES';
@@ -1106,14 +1088,14 @@ EXEC DBMS_MVIEW.REFRESH('MV_CATEGORY_SALES');
 
 SELECT * FROM MV_CATEGORY_SALES ORDER BY total_revenue DESC;
 
--- ============================================================
 -- KOMPLEXNÍ SELECT: přehled zákazníků s kategorizací podle útraty
 -- Dotaz zjistí pro každého zákazníka počet objednávek a celkovou
 -- útratu ze zaplacených objednávek, poté zákazníky rozdělí pomocí
 -- CASE na: VIP customer, Regular customer, Inactive customer.
 -- WITH zajišťuje přehlednost – výpočty jsou odděleny od prezentace.
 -- Využití: věrnostní program, cílené marketingové kampaně.
--- ============================================================
+
+
 WITH customer_stats AS (
     SELECT
         c.ID_customer,
