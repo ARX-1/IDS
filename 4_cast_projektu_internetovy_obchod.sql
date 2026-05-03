@@ -1062,7 +1062,9 @@ ORDER BY total_revenue DESC;
 SELECT * FROM TABLE(DBMS_XPLAN.DISPLAY);
 
 
+-- ============================================================
 -- PŘÍSTUPOVÁ PRÁVA PRO DRUHÉHO ČLENA TÝMU (xbadiks00)
+-- ============================================================
 GRANT SELECT ON CUSTOMER           TO xbadiks00;
 GRANT SELECT ON PRODUCT_CATEGORY   TO xbadiks00;
 GRANT SELECT ON PRODUCT_table      TO xbadiks00;
@@ -1073,11 +1075,51 @@ GRANT SELECT ON SHOPPING_CART      TO xbadiks00;
 GRANT SELECT ON SHOPPING_CART_ITEM TO xbadiks00;
 GRANT SELECT ON ADDRESS_table      TO xbadiks00;
 
+-- ============================================================
+-- KOMPLEXNÍ SELECT: přehled zákazníků s kategorizací podle útraty
+-- Dotaz zjistí pro každého zákazníka počet objednávek a celkovou
+-- útratu ze zaplacených objednávek, poté zákazníky rozdělí pomocí
+-- CASE na: VIP customer, Regular customer, Inactive customer.
+-- WITH zajišťuje přehlednost – výpočty jsou odděleny od prezentace.
+-- Využití: věrnostní program, cílené marketingové kampaně.
+-- ============================================================
+WITH customer_stats AS (
+    SELECT
+        c.ID_customer,
+        c.customer_name || ' ' || c.customer_surname AS customer_fullname,
+        c.email,
+        COUNT(o.ID_order) AS order_count,
+        NVL(SUM(CASE WHEN o.order_state = 1 THEN o.total_amount ELSE 0 END), 0) AS total_spent
+    FROM CUSTOMER c
+    LEFT JOIN ORDER_table o ON c.ID_customer = o.ID_customer
+    GROUP BY c.ID_customer, c.customer_name, c.customer_surname, c.email
+)
+SELECT
+    cs.ID_customer,
+    cs.customer_fullname,
+    cs.email,
+    cs.order_count,
+    cs.total_spent,
+    CASE
+        WHEN cs.total_spent >= 10000 OR cs.order_count >= 3 THEN 'VIP customer'
+        WHEN cs.order_count >= 1                            THEN 'Regular customer'
+        ELSE                                                     'Inactive customer'
+    END AS customer_category
+FROM customer_stats cs
+ORDER BY cs.total_spent DESC;
+
+-- ============================================================
 -- MATERIALIZOVANY POHLED: MV_CATEGORY_SALES
 --
--- Materializovany pohled patri xbadiks00 a pouziva tabulky
--- xuchytj00 pres prefix schematu xuchytj00.
--- Tato sekce se spousti pod uctem xbadiks00.
+-- POZOR:
+-- Tuto cast spousti druhy clen tymu pod svym Oracle uctem xbadiks00.
+-- Pred spustenim musi prvni clen tymu xuchytj00 spustit hlavni cast skriptu
+-- a udelit prava pomoci GRANT prikazu.
+--
+-- Materializovany pohled patri uzivateli xbadiks00 a pouziva tabulky
+-- uzivatele xuchytj00 pres prefix schematu xuchytj00.
+-- Tato sekce se tedy nespousti pod uctem xuchytj00.
+-- ============================================================
 
 BEGIN
     EXECUTE IMMEDIATE 'DROP MATERIALIZED VIEW MV_CATEGORY_SALES';
@@ -1106,36 +1148,3 @@ SELECT * FROM MV_CATEGORY_SALES ORDER BY total_revenue DESC;
 EXEC DBMS_MVIEW.REFRESH('MV_CATEGORY_SALES');
 
 SELECT * FROM MV_CATEGORY_SALES ORDER BY total_revenue DESC;
-
--- KOMPLEXNÍ SELECT: přehled zákazníků s kategorizací podle útraty
--- Dotaz zjistí pro každého zákazníka počet objednávek a celkovou
--- útratu ze zaplacených objednávek, poté zákazníky rozdělí pomocí
--- CASE na: VIP customer, Regular customer, Inactive customer.
--- WITH zajišťuje přehlednost – výpočty jsou odděleny od prezentace.
--- Využití: věrnostní program, cílené marketingové kampaně.
-
-
-WITH customer_stats AS (
-    SELECT
-        c.ID_customer,
-        c.customer_name || ' ' || c.customer_surname AS customer_fullname,
-        c.email,
-        COUNT(o.ID_order) AS order_count,
-        NVL(SUM(CASE WHEN o.order_state = 1 THEN o.total_amount ELSE 0 END), 0) AS total_spent
-    FROM CUSTOMER c
-    LEFT JOIN ORDER_table o ON c.ID_customer = o.ID_customer
-    GROUP BY c.ID_customer, c.customer_name, c.customer_surname, c.email
-)
-SELECT
-    cs.ID_customer,
-    cs.customer_fullname,
-    cs.email,
-    cs.order_count,
-    cs.total_spent,
-    CASE
-        WHEN cs.total_spent >= 10000 OR cs.order_count >= 3 THEN 'VIP customer'
-        WHEN cs.order_count >= 1                            THEN 'Regular customer'
-        ELSE                                                     'Inactive customer'
-    END AS customer_category
-FROM customer_stats cs
-ORDER BY cs.total_spent DESC;
