@@ -671,11 +671,10 @@ SET SERVEROUTPUT ON;
 
 -- TRIGGER 1: TRG_CART_ITEM_CHECK_PRICE
 -- BEFORE INSERT OR UPDATE na SHOPPING_CART_ITEM.
--- Funkce:
--- 1. Ověří, že quantity > 0.
--- 2. Načte aktuální katalogovou cenu produktu z PRODUCT_table.
--- 3. Pokud price_at_insertion není zadáno (NULL), doplní ho automaticky.
--- 4. Pokud price_at_insertion zadáno je, zkontroluje shodu s katalogem.
+-- Ověří, že quantity > 0.
+-- Načte aktuální katalogovou cenu produktu z PRODUCT_table.
+-- Pokud price_at_insertion není zadáno (NULL), doplní ho automaticky.
+-- Pokud price_at_insertion zadáno je, zkontroluje shodu s katalogem.
 -- Díky BEFORE triggeru se cena nastaví ještě před kontrolou NOT NULL
 -- constraintu tabulky, takže INSERT s NULL cenou projde.
 
@@ -728,15 +727,15 @@ WHERE sci.ID_shopping_cart = 50008
 ORDER BY sci.ID_shopping_cart_item;
 
 -- TRIGGER 2: TRG_ORDER_TOTAL_RECALC
+
 -- AFTER INSERT OR UPDATE OR DELETE na ORDER_ITEM.
--- Funkce:
---  Po každé změně položek objednávky přepočítá ORDER_table.total_amount
---  jako SUM(quantity * selling_price) pro dotčenou objednávku.
---  Při UPDATE se změnou ID_order přepočítá starou i novou objednávku.
--- Implementace:
---  Compound trigger (Oracle 12c+) eliminuje problém "mutating table" –
---  ID dotčených objednávek se shromáždí v AFTER EACH ROW a přepočet
---  proběhne až v AFTER STATEMENT, kdy tabulka ORDER_ITEM není mutující.
+-- Po každé změně položek objednávky přepočítá ORDER_table.total_amount
+-- jako SUM(quantity * selling_price) pro dotčenou objednávku.
+-- Při UPDATE se změnou ID_order přepočítá starou i novou objednávku.
+
+-- Compound trigger (Oracle 12c+) eliminuje problém "mutating table" –
+-- ID dotčených objednávek se shromáždí v AFTER EACH ROW a přepočet
+-- proběhne až v AFTER STATEMENT, kdy tabulka ORDER_ITEM není mutující.
 
 CREATE OR REPLACE TRIGGER TRG_ORDER_TOTAL_RECALC
 FOR INSERT OR UPDATE OR DELETE ON ORDER_ITEM
@@ -788,9 +787,9 @@ END TRG_ORDER_TOTAL_RECALC;
 /
 
 -- Předvedení TRG_ORDER_TOTAL_RECALC:
--- 1. Vložíme novou objednávku pro zákazníka 3 s dočasnou hodnotou total_amount = 1.
--- 2. Vložíme položku ORDER_ITEM (produkt 2000, množství 2, cena 3239).
--- 3. Trigger přepočítá total_amount -> 2 * 3239 = 6478.
+-- Vložíme novou objednávku pro zákazníka 3 s dočasnou hodnotou total_amount = 1.
+-- Vložíme položku ORDER_ITEM (produkt 2000, množství 2, cena 3239).
+-- Trigger přepočítá total_amount -> 2 * 3239 = 6478.
 DECLARE
     v_new_order_id ORDER_table.ID_order%TYPE;
 BEGIN
@@ -823,11 +822,10 @@ ORDER BY o.ID_order DESC;
 
 -- ULOŽENÁ PROCEDURA 1: PRINT_CUSTOMER_SUMMARY
 -- Vstup: p_customer_id – ID zákazníka.
--- Funkce:
---   - Načte zákazníka do proměnné CUSTOMER%ROWTYPE.
---   - Spočítá celkový počet jeho objednávek.
---   - Spočítá celkovou útratu ze zaplacených objednávek (order_state = 1).
---   - Výsledek vypíše přes DBMS_OUTPUT.
+-- Načte zákazníka do proměnné CUSTOMER%ROWTYPE.
+-- Spočítá celkový počet jeho objednávek.
+-- Spočítá celkovou útratu ze zaplacených objednávek (order_state = 1).
+-- Výsledek vypíše přes DBMS_OUTPUT.
 -- Použité prvky: %ROWTYPE, %TYPE, výjimka NO_DATA_FOUND.
 
 CREATE OR REPLACE PROCEDURE PRINT_CUSTOMER_SUMMARY(
@@ -876,14 +874,13 @@ END;
 
 -- ULOŽENÁ PROCEDURA 2: CREATE_ORDER_FROM_CART
 -- Vstup: p_customer_id – ID zákazníka.
--- Funkce:
---  Najde aktivní košík zákazníka (shopping_cart_status = 1).
---  Kurzorem projde položky košíku (SHOPPING_CART_ITEM).
---  Vytvoří novou objednávku v ORDER_table (ID přes SEQ_ORDER_ID).
---  Pro každou položku košíku vytvoří ORDER_ITEM (ID přes SEQ_ORDER_ITEM_ID).
---  Nastaví košík jako neaktivní (shopping_cart_status = 0).
+-- Najde aktivní košík zákazníka (shopping_cart_status = 1).
+-- Kurzorem projde položky košíku (SHOPPING_CART_ITEM).
+-- Vytvoří novou objednávku v ORDER_table (ID přes SEQ_ORDER_ID).
+-- Pro každou položku košíku vytvoří ORDER_ITEM (ID přes SEQ_ORDER_ITEM_ID).
+-- Nastaví košík jako neaktivní (shopping_cart_status = 0).
 -- Použité prvky: explicitní kurzor, %TYPE, výjimky (NO_DATA_FOUND, vlastní chyby).
--- Poznámka: TRG_ORDER_TOTAL_RECALC automaticky přepočítá total_amount
+-- TRG_ORDER_TOTAL_RECALC automaticky přepočítá total_amount
 -- objednávky při vkládání každé položky.
 
 CREATE OR REPLACE PROCEDURE CREATE_ORDER_FROM_CART(
@@ -961,8 +958,8 @@ END CREATE_ORDER_FROM_CART;
 
 -- Předvedení CREATE_ORDER_FROM_CART:
 -- Zákazník 1 (Martin Fucheek) má aktivní košík 50000 se dvěma položkami:
---   - produkt 2002 (Asics Gel-Kayano 31), qty=1, cena=3499
---   - produkt 3001 (Arena Cobra Ultra Swipe), qty=1, cena=1299
+-- produkt 2002 (Asics Gel-Kayano 31), qty=1, cena=3499
+-- produkt 3001 (Arena Cobra Ultra Swipe), qty=1, cena=1299
 -- Procedura košík převede na objednávku a deaktivuje ho.
 BEGIN
     CREATE_ORDER_FROM_CART(1);
