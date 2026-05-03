@@ -306,6 +306,28 @@ end;
 /
 
 --Sample data
+
+/*
+GEN AI usage:
+
+We used AI to generate additional sample data for our database.
+We have created first 2 rows of each table manually, then we used AI to generate more rows based on our initial data.
+Thanks to this approach we were able to quickly fill our database without spending too much time on repetetive manual work.
+We have reviewed all the AI generated data and ensured that it is consistent with our database scheme.
+
+Problems we encountered:
+We had to modify indentation because the generated insert statements were in the same line as values
+  so the lines were too long and hard to read for humans, we could fix it by changing the prompt but
+  we decided to do it manually because we wanted to check the generated data anyway.
+
+Because the sample data is not that important and it is only used as examples and testing later on in the project,
+there was no need to verify the data with real world sources. We just wanted to have realistic looking data that fits
+well with our theme.
+
+Used AI tool: Claude sonnet 4.6
+Conversation link: "https://claude.ai/share/3b0e902e-c335-430f-9bdf-e855bf2641b1"
+*/
+
 --Customers:
 insert into CUSTOMER (ID_customer, customer_name, customer_surname, email, phone_number, password_hash, registration_date, user_status)
 values (1, 'Martin', 'Fucheek', 'martin.fucheek@email.com', '+421999514321', 'pwdhash1', DATE '2025-02-01', 1);
